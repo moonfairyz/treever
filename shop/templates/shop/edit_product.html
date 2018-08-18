@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+	Update Your Tree Collection - Tree Store
+{% endblock %}
+
+{% block content %}
+<form method="POST">
+  {% csrf_token %}
+  {{ product_form | crispy }}
+  <button type="submit">Update</button>
+  <!--<input type="submit" value="submit"/>-->
+</form>
+
+{% endblock %}

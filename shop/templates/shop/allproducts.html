@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block metadescription %}
+	Welcome to the Tree Store where you can book services for your trees.
+{% endblock %}
+{% block title %}
+	See Your Products of Tree Collection - Tree Store
+{% endblock %}
+
+{% block content %}
+	<div class="row my_row_class">
+		<div class="mx-auto">
+			<p>All Products</p>
+		</div>
+	</div>
+	<br>
+	<div>
+		<h1 class="text-center my_title">Your Favourite Products</h1>		
+		<p class="text-center text-justify">These are your favourite and most treasured products.</p>
+	</div>
+	<br>
+	<div class="container">
+		<div class="row mx-auto">
+			{% for product in products %}
+				<div class="my_bottom_margin col-9 col-sm-12 col-md-4 col-md-12 col-lg-4">
+					<div class="card text-center" style="min-width: 18rem;">
+						<a href="{{product.get_url}}"><img class="card-img-top my_image" src="{{product.image.url}}" alt="{{product.name}}"></a>
+						<div class="card-body">
+							<h4>{{product.name}}</h4>
+						</div>
+					</div>
+				</div>
+			{% endfor %}			
+		</div>
+		<br>
+		<div class="container text-right">
+			<a href="{% url 'shop:AllService' %}"><button type="button" class="btn btn-primary">Next: Select services</button></a>
+		</div>	
+		<br>
+	</div>
+{% endblock %}
+	

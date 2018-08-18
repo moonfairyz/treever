@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block metadescription %}
+	Update your account with us. The perfect Tree store has a variety of amazing services.
+{% endblock %}
+{% block title %}
+	Update Your Account - Tree Store
+{% endblock %}
+{% block content %}
+<div>
+	<h1 class="my_title text-center">Profile Details</h1>
+	<p class="text-center">First Name: {{ profile.user.first_name }}</p>
+	<p class="text-center">Last Name: {{ profile.user.last_name }}</p>
+	<p class="text-center">Username: {{ profile.user }}</p>
+	<p class="text-center">Address: {{ profile.address }}</p>
+	<p class="text-center">About: {{ profile.about }}</p>
+</div>
+{% endblock %}

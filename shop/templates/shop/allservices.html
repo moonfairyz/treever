@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block metadescription %}
+	Welcome to the Tree Store where you can book services for your trees.
+{% endblock %}
+{% block title %}
+	See Our Services For Your Tree Collection - Tree Store
+{% endblock %}
+
+{% block content %}
+	
+	<div class="row my_row_class">
+		<div class="mx-auto">
+			<p><a href="">All Services</a></p>			
+		</div>
+	</div>
+	<br>
+	<div>
+		<h1 class="text-center my_title">Our Curated Services</h1>		
+		<p class="text-center text-justify">Our services are top-notched and will instantly add a sense of serenity and calm to your garden environment. It will transform your bland looking garden environment into a pleasant, fresh and green ambiance. We will ensure your beloved garden is manicured to perfection.</p>
+	</div>
+	<br>
+	<div class="container">
+		<div class="row mx-auto">
+			{% for service in services %}
+				<div class="my_bottom_margin col-9 col-sm-12 col-md-4 col-md-12 col-lg-4">
+					<div class="card text-center" style="min-width: 18rem;">
+						<a href="{{service.get_url}}"><img class="card-img-top my_image" src="{{service.image.url}}" alt="{{service.title}}"></a>
+						<div class="card-body">
+							<h4>{{service.title}}</h4>
+						</div>
+					</div>
+				</div>
+			{% endfor %}			
+		</div>
+		<br>
+		<div class="container text-right">
+			<a href="#"><button type="button" class="btn btn-primary">Next: Go to Cart</button></a>
+		</div>	
+		<br>
+	</div>
+{% endblock %}

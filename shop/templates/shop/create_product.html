@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+	Create Your Tree Collection - Tree Store
+{% endblock %}
+
+
+{% block content %}
+	<div class="mx-auto">
+		<img class="my_image my_image_padding" src="{% static 'img/banner.png' %}" alt="Create Your Favourite Products">
+	</div>
+	<br>
+	<div class="row my_row_class">
+		<div class="mx-auto">
+			<p>Create Product</p>
+		</div>
+	</div>
+	<br>
+
+	{% if error %}
+    	<div class="alert alert-warning alert-dismissible" role="alert">
+        	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            	<span aria-hidden="true">&times;</span>
+        	</button>
+      		<strong>Warning!</strong> {{ error }}
+    	</div>
+  	{% endif %}
+
+	<form method="POST" enctype="multipart/form-data">
+		{% csrf_token %}
+		<p>{{ product_form | crispy }}</p>
+		<button type="submit">Publish</button>
+	</form>
+		
+{% endblock %}
+

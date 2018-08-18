@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+	Delete Your Tree Product - Tree Store
+{% endblock %}
+
+{% block content %}
+
+	<form method="POST" enctype="multipart/form-data">
+		{% csrf_token %}
+		<p>Are you sure you want to remove {{ product.name }}?</p>
+		<button type="submit">Delete</button>
+	</form>
+		
+{% endblock %}
