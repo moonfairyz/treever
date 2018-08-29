@@ -13,9 +13,9 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
 	product = models.ForeignKey(Product, on_delete=models.CASCADE)
-	service = models.ForeignKey(Service, on_delete=models.CASCADE)
+	service = models.ForeignKey(Service, on_delete=models.CASCADE, blank=True, null=True)
 	cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-	quantity = models.IntegerField()
+	quantity = models.IntegerField(default=1)
 	active = models.BooleanField(default=True)
 	class Meta:
 		db_table = 'CartItem'
@@ -24,4 +24,4 @@ class CartItem(models.Model):
 		return self.product.price * self.quantity
 
 	def __str__(self):
-		return self.product
+		return self.product.name
