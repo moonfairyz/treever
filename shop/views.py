@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Service, Product, Profile
 from django.contrib.auth.models import Group, User
@@ -21,11 +21,8 @@ def AllProduct(request):
 	return render(request, 'shop/allproducts.html', {'products':products})
 
 @login_required(login_url="/")
-def ProductDetail(request, product_slug):
-	try:
-		product = Product.objects.get(slug=product_slug)
-	except Exception as e:
-		raise e
+def product_detail(request, product_slug):
+	product = get_object_or_404(Product, slug=product_slug)
 	return render(request, 'shop/product.html', {'product':product})
 
 @login_required(login_url="/")
@@ -54,21 +51,21 @@ def CreateProduct(request):
 
 @login_required(login_url="/")
 def EditProduct(request, product_slug):
-    try:
-        product = Product.objects.get(slug=product_slug)
-        error = ''
-        if request.method == 'POST':
-            product_form = ProductForm(request.POST, request.FILES, instance=product)
-            if product_form.is_valid():
-                product_form.save()
-                return redirect('shop:AllProduct')
-            else:
-                error = "Data is not valid"
-        else:
-           product_form = ProductForm(instance=product)
-        return render(request, 'shop/edit_product.html', {'product_form':product_form, 'error':error})
-    except Product.DoesNotExist:
-        return redirect('shop:AllProduct')
+	try:
+		product = Product.objects.get(slug=product_slug)
+		error = ''
+		if request.method == 'POST':
+			product_form = ProductForm(request.POST, request.FILES, instance=product)
+			if product_form.is_valid():
+				product_form.save()
+				return redirect('shop:AllProduct')
+			else:
+				error = "Data is not valid"
+		else:
+			product_form = ProductForm(instance=product)
+		return render(request, 'shop/edit_product.html', {'product_form':product_form, 'error':error})
+	except Product.DoesNotExist:
+		return redirect('shop:AllProduct')
 
 @login_required(login_url="/")
 def DeleteProduct(request, product_slug):

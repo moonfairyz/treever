@@ -71,6 +71,7 @@ def cart_detail(request, total=0, counter=0, cart_items = None):
 						email=email,
 						source = token
 				)
+			
 			charge = stripe.Charge.create(
 						amount=stripe_total,
 						currency="gbp",
