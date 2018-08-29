@@ -16,7 +16,7 @@ def AllService(request):
 	return render(request, 'shop/allservices.html', {'services':services})
 
 @login_required(login_url="/")
-def AllProduct(request):
+def all_products(request):
 	products = Product.objects.filter(available=True)
 	return render(request, 'shop/allproducts.html', {'products':products})
 
@@ -58,21 +58,21 @@ def EditProduct(request, product_slug):
 			product_form = ProductForm(request.POST, request.FILES, instance=product)
 			if product_form.is_valid():
 				product_form.save()
-				return redirect('shop:AllProduct')
+				return redirect('shop:all-products')
 			else:
 				error = "Data is not valid"
 		else:
 			product_form = ProductForm(instance=product)
 		return render(request, 'shop/edit_product.html', {'product_form':product_form, 'error':error})
 	except Product.DoesNotExist:
-		return redirect('shop:AllProduct')
+		return redirect('shop:all-products')
 
 @login_required(login_url="/")
 def DeleteProduct(request, product_slug):
 	product = Product.objects.get(slug=product_slug)
 	if request.method == 'POST':
 		product.delete()
-		return redirect('shop:AllProduct')
+		return redirect('shop:all-products')
 	return render(request, 'shop/delete_product.html', {'product': product})
 
 @login_required(login_url="/")

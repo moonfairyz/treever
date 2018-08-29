@@ -11,7 +11,7 @@ urlpatterns = [
 	path('delete_product/<slug:product_slug>/', views.DeleteProduct, name='Delete_Product'),
 	path('allservices/', views.AllService, name='AllService'),
 	path('allservices/<slug:service_slug>/', views.ServiceDetail, name='ServiceDetail'),
-	path('allproducts/', views.AllProduct, name='AllProduct'),
+	path('allproducts/', views.all_products, name='all-products'),
 	path('allproducts/<slug:product_slug>/', views.product_detail, name='ProductDetail'),
 
 ]

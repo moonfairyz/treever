@@ -9,7 +9,7 @@
 {% block content %}
 	<div class="row my_prod_row_class">
 		<div class="mx-auto">
-			<p><a href="{% url 'shop:AllProduct' %}">All Products</a> | {% if product %} <a href="{% url 'shop:Edit_Product' product.slug %}">Update</a> {% endif %} | {% if product %} <a href="{% url 'shop:Delete_Product' product.slug %}">Remove</a> {% endif %} </p>
+			<p><a href="{% url 'shop:all-products' %}">All Products</a> | {% if product %} <a href="{% url 'shop:Edit_Product' product.slug %}">Update</a> {% endif %} | {% if product %} <a href="{% url 'shop:Delete_Product' product.slug %}">Remove</a> {% endif %} </p>
 		</div>
 		<div class="container">
 			<br>
