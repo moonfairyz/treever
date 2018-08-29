@@ -24,7 +24,7 @@ from django.contrib.auth import views as authViews
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.Home, name='Home'),
-    path('shop/', include('shop.urls')),
+    path('shop/', include('shop.urls', namespace='shop')),
     path('search/', include('search_app.urls')),
     path('cart/', include('cart.urls')),
     path('order/', include('order.urls')),
