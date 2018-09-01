@@ -67,24 +67,33 @@ def checkout(request):
 	'''
 	The actual checkout page
 	'''
-	
+	gateway = braintree.BraintreeGateway(
+	    braintree.Configuration(
+	        environment=settings.BRAINTRRE_ENVIRONMENT,
+	        merchant_id=settings.BRAINTREE_MERCHANT_ID,
+	        public_key=settings.BRAINTREE_PUBLIC_KEY,
+	        private_key=settings.BRAINTREE_PRIVATE_KEY
+	    )
+	)
+
 	if request.method == 'GET':
 	
-		gateway = braintree.BraintreeGateway(
-		    braintree.Configuration(
-		        environment=settings.BRAINTRRE_ENVIRONMENT,
-		        merchant_id=settings.BRAINTREE_MERCHANT_ID,
-		        public_key=settings.BRAINTREE_PUBLIC_KEY,
-		        private_key=settings.BRAINTREE_PRIVATE_KEY
-		    )
-		)
 		client_token = gateway.client_token.generate()
 		return render(request, 'checkout.html', {'client_token': client_token})
 
 	else:
-		print(request.POST)
-		return HttpResponse('Done')
+		result = gateway.transaction.sale({
+			'amount': request.POST['amount'],
+			'payment_method_nonce': request.POST['payment_method_nonce'],
+			'options': {
+				"submit_for_settlement": True
+			}
+		})
+		
+		if result.is_success or  result.transaction:
+			return HttpResponse('Done')
 	
+		return HttpResponse('Failed')
 	
 def cart_detail(request, total=0, counter=0, cart_items=None):
 	'''
