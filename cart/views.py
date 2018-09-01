@@ -9,10 +9,10 @@ from django.http.response import Http404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
-from order.models import Order, OrderItem
+from order.models import Order, OrderItem, UserProfile
 from shop.models import Product, Service
-from .models import Cart, CartItem, UserProfile
-from .forms import ProfileForm
+from .models import Cart, CartItem
+from order.forms import ProfileForm
 
 
 

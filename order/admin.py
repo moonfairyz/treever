@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order, OrderItem
+from .models import Order, OrderItem, UserProfile
 
 class OrderItemAdmin(admin.TabularInline):
 	model = OrderItem
@@ -13,3 +13,9 @@ class OrderItemAdmin(admin.TabularInline):
 	max_num = 0
 	template = 'admin/order/tabular.html'
 
+
+class ProfileAdmin(admin.ModelAdmin):
+	list_display = ('user','address','city','postcode','country')
+	
+
+admin.site.register(UserProfile, ProfileAdmin)

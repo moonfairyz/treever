@@ -1,5 +1,5 @@
 from django import forms
-from cart.models import UserProfile
+from order.models import UserProfile
 
 class ProfileForm(forms.ModelForm):
     class Meta:
