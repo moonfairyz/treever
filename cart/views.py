@@ -5,11 +5,14 @@ from django.conf import settings
 from django.template.loader import get_template
 from django.core.mail import EmailMessage
 from django.core.exceptions import ObjectDoesNotExist
+from django.http.response import Http404
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 from order.models import Order, OrderItem
 from shop.models import Product, Service
-from .models import Cart, CartItem
-from django.http.response import Http404
+from .models import Cart, CartItem, UserProfile
+from .forms import ProfileForm
 
 
 
@@ -34,6 +37,18 @@ def add_cart(request, product_id):
 		
 	return redirect('cart:cart_detail')
 
+@login_required
+def get_address(request):
+	profile, _ = UserProfile.objects.get_or_create(user=request.user)
+	if request.method == 'POST':
+		form = ProfileForm(request.POST, instance=profile)
+		if form.is_valid():
+			redirect(reverse('cart:checkout'))
+			
+	else:
+		form = ProfileForm(instance=profile)
+		
+	return render(request, 'profile.html', {'form': form})
 
 def checkout(request):
 	pass
@@ -66,79 +81,6 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
 	stripe_total = int(total * 100)
 	description = 'Perfect Cushion Shop - New Order'
 	
-	if request.method == 'POST':
-		# print(request.POST)
-		try:
-			token = request.POST['stripeToken']
-			email = request.POST['stripeEmail']
-			billingName = request.POST['stripeBillingName']
-			billingAddress1 = request.POST['stripeBillingAddressLine1']
-			billingcity = request.POST['stripeBillingAddressCity']
-			billingPostcode = request.POST['stripeBillingAddressZip']
-			billingCountry = request.POST['stripeBillingAddressCountryCode']
-			shippingName = request.POST['stripeShippingName']
-			shippingAddress1 = request.POST['stripeShippingAddressLine1']
-			shippingcity = request.POST['stripeShippingAddressCity']
-			shippingPostcode = request.POST['stripeShippingAddressZip']
-			shippingCountry = request.POST['stripeShippingAddressCountryCode']
-			customer = stripe.Customer.create(
-						email=email,
-						source=token
-				)
-			
-			charge = stripe.Charge.create(
-						amount=stripe_total,
-						currency="gbp",
-						description=description,
-						customer=customer.id
-				)
-			'''Creating the order'''
-			try:
-				order_details = Order.objects.create(
-						token=token,
-						total=total,
-						emailAddress=email,
-						billingName=billingName,
-						billingAddress1=billingAddress1,
-						billingCity=billingcity,
-						billingPostcode=billingPostcode,
-						billingCountry=billingCountry,
-						shippingName=shippingName,
-						shippingAddress1=shippingAddress1,
-						shippingCity=shippingcity,
-						shippingPostcode=shippingPostcode,
-						shippingCountry=shippingCountry
-					)
-				order_details.save()
-				for order_item in cart_items:
-					oi = OrderItem.objects.create(
-							product=order_item.product.name,
-							quantity=order_item.quantity,
-							price=order_item.product.price,
-							order=order_details
-						)
-					oi.save()
-					'''Reduce stock when order is placed or saved'''
-					products = Product.objects.get(id=order_item.product.id)
-					products.stock = int(order_item.product.stock - order_item.quantity)
-					products.save()
-					order_item.delete()
-					'''The terminal will print this message when the order is saved'''
-					print('The order has been created')
-				try:  # email part start
-					'''Calling the sendEmail function'''
-					sendEmail(order_details.id)
-					print('The order email has been sent to the customer.')
-				except IOError as e:
-					return e
-				return redirect('order:thanks', order_details.id)
-			except ObjectDoesNotExist:
-				pass
-		except :
-			import traceback
-			traceback.print_exc()
-			return False, e
-		
 	#request.session['braintree_client_token'] = braintree.ClientToken.generate()
 	return render(request, 'cart.html', dict(cart_items=cart_items, total=total, client_token=client_token,
 											counter=counter, stripe_total=stripe_total, description=description))
