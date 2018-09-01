@@ -7,119 +7,41 @@
 	Cart - Perfect Cushion Store
 {% endblock %}
 {% block content %}
-	{% if not cart_items %}
-		<div>
-			<div class="text-center">
-				<br>
-				<h1 class="text-center my_title">
-					Your shopping cart is empty
-				</h1>
-				<br>
-				<p class="text-center">
-					Please click <a href="{% url 'shop:all-products' %}">here</a> to continue shopping.
-				</p>
-			</div>
-		</div>
-	{% else %}
-		<div>
-			<div class="text-center">
-				<br>
-				<h1 class="text-center my_title">
-					Your shopping cart
-				</h1>
-				<br>
-			</div>
-		</div>
-		<div class="row mx-auto">
-			<div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
-				<table class="table my_custom_table">
-					<thead class="my_custom_thead">
-						<tr>
-							<th colspan="5">
-								Your items
-							</th>
-						</tr>
-						
-					</thead>
-					<tbody>
-						{% for cart_item in cart_items %}
-							<tr>
-								<td>
-									<a href="cart_item.product.get_absolute_url"><img src="{{cart_item.product.image.url}}" alt="" class="float-left rounded custom_image"></a>
-								</td>
-								<td class="text-left">
-									{{cart_item.product.name}}
-									<br>
-									SKU: {{cart_item.product.id}}
-									<br>
-									Unit Price: £{{cart_item.product.price}}
-									<br>
-									Qty: {{cart_item.quantity}} x £{{cart_item.product.price}}
-								</td>
-								<td>
-									£{{cart_item.sub_total}}
-								</td>
-								{% if cart_item.quantity < cart_item.product.stock %}
-									<td>
-										<a href="{% url 'cart:add_cart' cart_item.product.id %}" class="custom_a"><i class="fas fa-plus-circle custom_icon"></i></a>&nbsp;<a href="{% url 'cart:cart_remove' cart_item.product.id %}" class="custom_a"><i class="fas fa-minus-circle custom_icon"></i></a>&nbsp;<a href="{% url 'cart:full_remove' cart_item.product.id %}" class="custom_icon"><i class="fas fa-trash-alt custom_icon"></i></a>
-									</td>
-								{% else %}
-									<td>
-										&nbsp;<a href="{% url 'cart:cart_remove' cart_item.product.id %}" class="custom_a"><i class="fas fa-minus-circle custom_icon"></i></a>&nbsp;<a href="{% url 'cart:full_remove' cart_item.product.id %}" class="custom_icon"><i class="fas fa-trash-alt custom_icon"></i></a>
-									</td>
-									<td></td>
-								{% endif %}
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-				
-			</div>
-			<div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
-				<table class="table my_custom_table">
-					<thead class="my_custom_thead">
-						<tr>
-							<th>
-								Checkout
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>
-								Please review your shopping cart items before proceeding with the order payment.
-							</td>
-						</tr>
-						<tr>
-							<td class="text-left">
-								Your total is: <strong>£{{ total }}</strong>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				      <form id="payment-form" method="post" action="/checkouts">
-					      <section>
-					        <label for="amount">
-					          <span class="input-label">Amount</span>
-					          <div class="input-wrapper amount-wrapper">
-					            <input id="amount" name="amount" type="tel" min="1" placeholder="Amount" value="10">
-					          </div>
-					        </label>
-					
-					        <div class="bt-drop-in-wrapper">
-					          <div id="bt-dropin"></div>
-					        </div>
-					      </section>
-					
-					      <input type="hidden" id="nonce" name="payment_method_nonce" />
-					      <button class="button" type="submit" id="submit-button"><span>Test Transaction</span></button>
-					    </form>
-				  
-					<a href="{% url 'shop:all-products' %}" class="btn btn-secondary btn-block my_custom_button">Continue Shopping</a>
-				</div>
-			</div>
-		</div>
-		<br>
+
+<div class="wrapper">
+  <div class="checkout container">
+
+    <header>
+      <h1>Hi, <br>Let's test a transaction</h1>
+      <p>
+        Make a test payment with Braintree using PayPal or a card
+      </p>
+    </header>
+
+    <form id="payment-form" method="post" action="{% url 'cart:checkout' %}">
+    {% csrf_token %}
+      <section>
+        <label for="amount">
+          <span class="input-label">Amount</span>
+          <div class="input-wrapper amount-wrapper">
+            <input id="amount" name="amount" type="tel" min="1" placeholder="Amount" value="10">
+          </div>
+        </label>
+
+        <div class="bt-drop-in-wrapper">
+          <div id="bt-dropin"></div>
+        </div>
+      </section>
+
+      <input type="hidden" id="nonce" name="payment_method_nonce" />
+      <button class="btn btn-primary btn-block" type="submit" id="submit-button"><span>Test Transaction</span></button>
+    </form>
+
+  </div>
+</div>
+    <a href="{% url 'shop:all-products' %}" class="btn btn-secondary btn-block my_custom_button">Continue Shopping</a>
+    
+    
 <script src="https://js.braintreegateway.com/web/dropin/1.12.0/js/dropin.min.js"></script>
 <script>
   var form = document.querySelector('#payment-form');
@@ -149,5 +71,5 @@
   });
 </script>
 
-	{% endif %}
+	
 {% endblock %}

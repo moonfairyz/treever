@@ -5,7 +5,7 @@ from django.conf import settings
 from django.template.loader import get_template
 from django.core.mail import EmailMessage
 from django.core.exceptions import ObjectDoesNotExist
-from django.http.response import Http404
+from django.http.response import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
@@ -17,6 +17,9 @@ from order.forms import ProfileForm
 
 
 def _cart_id(request):
+	'''
+	get or create a cart id
+	'''
 	cart = request.session.session_key
 	if not cart:
 		cart = request.session.create()
@@ -39,20 +42,50 @@ def add_cart(request, product_id):
 
 @login_required
 def get_address(request):
+	'''
+	Get the shipping address.
+	
+	We will save it as the user's profile so that he needs not type it again the next time.
+	Braintree does not directly collect this information. We have to collect it with our own
+	form. 
+	'''
 	profile, _ = UserProfile.objects.get_or_create(user=request.user)
 	if request.method == 'POST':
 		form = ProfileForm(request.POST, instance=profile)
 		if form.is_valid():
-			redirect(reverse('cart:checkout'))
-			
+			form.save()
+			return redirect(reverse('cart:checkout'))
+		else:
+			print(form)
+			print(form.errors)
 	else:
 		form = ProfileForm(instance=profile)
 		
 	return render(request, 'profile.html', {'form': form})
 
 def checkout(request):
-	pass
+	'''
+	The actual checkout page
+	'''
+	
+	if request.method == 'GET':
+	
+		gateway = braintree.BraintreeGateway(
+		    braintree.Configuration(
+		        environment=settings.BRAINTRRE_ENVIRONMENT,
+		        merchant_id=settings.BRAINTREE_MERCHANT_ID,
+		        public_key=settings.BRAINTREE_PUBLIC_KEY,
+		        private_key=settings.BRAINTREE_PRIVATE_KEY
+		    )
+		)
+		client_token = gateway.client_token.generate()
+		return render(request, 'checkout.html', {'client_token': client_token})
 
+	else:
+		print(request.POST)
+		return HttpResponse('Done')
+	
+	
 def cart_detail(request, total=0, counter=0, cart_items=None):
 	'''
 	Display a cart
@@ -68,21 +101,12 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
 	except ObjectDoesNotExist:
 		raise Http404
 
-	gateway = braintree.BraintreeGateway(
-	    braintree.Configuration(
-	        environment=settings.BRAINTRRE_ENVIRONMENT,
-	        merchant_id=settings.BRAINTREE_MERCHANT_ID,
-	        public_key=settings.BRAINTREE_PUBLIC_KEY,
-	        private_key=settings.BRAINTREE_PRIVATE_KEY
-	    )
-	)
-	client_token = gateway.client_token.generate()
 	
 	stripe_total = int(total * 100)
 	description = 'Perfect Cushion Shop - New Order'
 	
 	#request.session['braintree_client_token'] = braintree.ClientToken.generate()
-	return render(request, 'cart.html', dict(cart_items=cart_items, total=total, client_token=client_token,
+	return render(request, 'cart.html', dict(cart_items=cart_items, total=total, 
 											counter=counter, stripe_total=stripe_total, description=description))
 
 
