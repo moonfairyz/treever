@@ -1,12 +1,14 @@
+
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
-from .models import Service, Product, Profile
 from django.contrib.auth.models import Group, User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
+
+from .models import Service, Product, Profile
 from .forms import ProductForm
 from .forms import SignUpForm
+
 
 def Home(request):
 	return render(request, 'home.html',{})

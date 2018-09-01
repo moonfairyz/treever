@@ -26,7 +26,7 @@ urlpatterns = [
     path('', views.Home, name='Home'),
     path('shop/', include('shop.urls', namespace='shop')),
     path('search/', include('search_app.urls')),
-    path('cart/', include('cart.urls')),
+    path('cart/', include('cart.urls', namespace='cart')),
     path('order/', include('order.urls')),
     path('account/create/', views.signupView, name='signup'),
     path('account/login/', views.signinView, name='signin'),

@@ -97,27 +97,51 @@
 						</tr>
 					</tbody>
 				</table>
-				<div class="mx-auto">
-					<form action="" method="POST">
-						{% csrf_token %}
-					  <script
-					    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-					    data-key="{{ data_key }}"
-					    data-amount="{{ stripe_total }}"
-					    data-name="Perfect Cushion Shop"
-					    data-description="{{ description }}"
-					    data-image="{% static 'img/logo.png' %}"
-					    data-locale="auto"
-					    data-currency="gbp"
-					    data-shipping-address="true"
-					    data-billing-address="true"
-					    data-zip-code="true">
-					  </script>
-					</form>
+				<script src="https://js.braintreegateway.com/web/dropin/1.12.0/js/dropin.min.js"></script>
+				 <div id="dropin-container"></div>
+				  <button id="submit-button">Request payment method</button>
+				  <script>
+				    var button = document.querySelector('#submit-button');
+				
+				    braintree.dropin.create({
+				      authorization: $('#token').data('token'),
+				      container: '#dropin-container'
+				    }, function (createErr, instance) {
+				      button.addEventListener('click', function () {
+				        instance.requestPaymentMethod(function (err, payload) {
+				          // Submit payload.nonce to your server
+				        });
+				      });
+				    });
+				  </script>
+					<span data-token='{{ client_token}}' id='token'></span>
 					<a href="{% url 'shop:all-products' %}" class="btn btn-secondary btn-block my_custom_button">Continue Shopping</a>
 				</div>
 			</div>
 		</div>
 		<br>
+		<script type="text/javascript">
+			braintree.setup(
+			    "{{ request.session.braintree_client_token }}",
+			    "custom",
+			    {
+			        id: "creditcard_form",
+			        hostedFields: {
+			            number: {
+			                selector: "#cc_number"
+			            },
+			            expirationMonth: {
+			                selector: "#cc_expiration_month"
+			            },
+			            expirationYear: {
+			                selector: "#cc_expiration_year"
+			            },
+			            cvv: {
+			                selector: "#cc_verification_code"
+			            },
+			        },
+			    }
+			);
+			</script>
 	{% endif %}
 {% endblock %}
