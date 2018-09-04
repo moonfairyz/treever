@@ -25,7 +25,7 @@ SECRET_KEY = '6=bc&39zye$07)%3f_i-*+rj0*@r-zgmjb!p41qi=ad#(1mif-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1','localhost']
 
 
 # Application definition
@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'cart',
     'order',
     'crispy_forms',
-    'stripe',
 ]
 
 MIDDLEWARE = [
@@ -144,3 +143,10 @@ EMAIL_PORT = '587'
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
+
+
+BRAINTRRE_ENVIRONMENT = 'sandbox'
+BRAINTREE_MERCHANT_ID = 'kk628gj9y32m8zjk'
+BRAINTREE_PUBLIC_KEY = '7hv8pv5jrs6v9y65'
+BRAINTREE_PRIVATE_KEY = 'e9010791f309a8ec51458c3503f18059'
+

@@ -9,7 +9,7 @@
 {% block content %}
 	<div class="row my_prod_row_class">
 		<div class="mx-auto">
-			<p><a href="{% url 'shop:AllProduct' %}">All Products</a> | {% if product %} <a href="{% url 'shop:Edit_Product' product.slug %}">Update</a> {% endif %} | {% if product %} <a href="{% url 'shop:Delete_Product' product.slug %}">Remove</a> {% endif %} </p>
+			<p><a href="{% url 'shop:all-products' %}">All Products</a> | {% if product %} <a href="{% url 'shop:Edit_Product' product.slug %}">Update</a> {% endif %} | {% if product %} <a href="{% url 'shop:Delete_Product' product.slug %}">Remove</a> {% endif %} </p>
 		</div>
 		<div class="container">
 			<br>
@@ -26,7 +26,7 @@
 						<p>Longitude: {{product.longitude}}</p>
 						<p class="my_title">Product Description</p>
 						<p class="text-justify my_prod_text">{{product.description}}</p>
-						<a class="btn btn-secondary" href="#{% url 'cart:add_cart' product.id %}">Add to Cart</a>
+						<a class="btn btn-secondary cart-add" href="{% url 'cart:add_cart' product.id %}">Add to Cart</a>
 					</div>
 				</div>	
 			</div>
