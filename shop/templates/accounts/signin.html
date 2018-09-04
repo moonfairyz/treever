@@ -30,10 +30,10 @@
 						<p>{{ form | crispy }}</p>
 						<div class="row">
 					        <div class="col-md-6 text-center">
-					            <span class="float-md-left"><button type="submit" class="btn btn-secondary">Login</button></span>
+					            <span class="float-md-left"><button type="submit" class="btn btn-secondary login">Login</button></span>
 					        </div>
 					        <div class="col-md-6 text-center">
-					            <span class="float-md-right"><p><a href="{% url 'password_reset' %}">Forgot Password?</a></p></span>
+					            <span class="float-md-right"><a href="{% url 'password_reset' %}">Forgot Password?</a></span>
 					        </div>
 					    </div>
 					</form>
